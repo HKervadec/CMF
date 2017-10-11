@@ -10,22 +10,22 @@ function [uu, erriter, num, tt] = test_CMF
 %   Before using the functions CMF_GPU, you should compile the GPU program:
 %       >> nvmex -f nvmexopts.bat CMF_GPU.cu -IC:\cuda\v4.0\include -LC:\cuda\v4.0\lib\x64 -lcufft -lcudart
 %
-%   After compilation, you can define all the parameters (penalty, C_s, C_t, para) as follows: 
-%   
+%   After compilation, you can define all the parameters (penalty, C_s, C_t, para) as follows:
+%
 %        - penalty: point to the edge-weight penalty parameters to
 %                   total-variation function.
-% 
-%          For the case without incorporating image-edge weights, 
-%          penalty is given by the constant everywhere. For the case 
-%          with image-edge weights, penalty is given by the pixelwise 
+%
+%          For the case without incorporating image-edge weights,
+%          penalty is given by the constant everywhere. For the case
+%          with image-edge weights, penalty is given by the pixelwise
 %          weight function:
-% 
+%
 %          for example, penalty(x) = b/(1 + a*| grad f(x)|) where b,a > 0 .
-% 
+%
 %        - C_s: point to the capacities of source flows ps
-% 
+%
 %        - C_t: point to the capacities of sink flows pt
-% 
+%
 %        - para: a sequence of parameters for the algorithm
 %             para[0,1]: rows, cols of the given image
 %             para[2]: the maximum iteration number
@@ -33,7 +33,7 @@ function [uu, erriter, num, tt] = test_CMF
 %             para[4]: cc for the step-size of augmented Lagrangian method
 %             para[5]: the step-size for the graident-projection step to the
 %                    total-variation function. Its optimal range is [0.1, 0.17].
-% 
+%
 %
 %        Example:
 %            >> [u, erriter, i, timet] = CMF_GPU(single(penalty), single(Cs), single(Ct), single(para));
@@ -46,18 +46,18 @@ function [uu, erriter, num, tt] = test_CMF
 %
 %
 %
-%   Please email Jing Yuan (cn.yuanjing@gmail.com) for any questions, 
+%   Please email Jing Yuan (cn.yuanjing@gmail.com) for any questions,
 %   suggestions and bug reports
 %
 %   The Software is provided "as is", without warranty of any kind.
 %
 %               Version 1.0
-%   https://sites.google.com/site/wwwjingyuan/       
+%   https://sites.google.com/site/wwwjingyuan/
 %
-%   Copyright 2011 Jing Yuan (cn.yuanjing@gmail.com)   
+%   Copyright 2011 Jing Yuan (cn.yuanjing@gmail.com)
 %
 
-ur = double(imread('cameraman.jpg'))/255;
+ur = double(imread('data/cameraman.jpg'))/255;
 [rows, cols] = size(ur);
 
 varParas = [rows; cols; 300; 1e-4; 0.3; 0.16];
@@ -84,4 +84,5 @@ fCt = abs(ur - ulab(2));
 % ----------------------------------------------------------------------
 %  Use the function CMF_GPU to run the algorithm on GPU
 % ----------------------------------------------------------------------
-[uu, erriter,num,tt] = CMF_GPU(single(penalty), single(fCs), single(fCt), single(varParas));
+% [uu, erriter,num,tt] = CMF_GPU(single(penalty), single(fCs), single(fCt), single(varParas));
+[uu, erriter,num,tt] = CMF_Cut();

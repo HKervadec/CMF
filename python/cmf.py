@@ -24,7 +24,7 @@ def CMF_2D(ur, params):
     # specified legal flows.
     # - the initial value of the spatial flow fiels p = (pp1, pp2) is set to
     # be zero.
-    u = ((Cs - Ct) >= 0) * 1.
+    u = np.asarray((Cs - Ct) >= 0, np.float64)
     ps = np.minimum(Cs, Ct)  # Minimum element wise between the two
     pt = ps
 
@@ -72,11 +72,22 @@ def CMF_2D(ur, params):
     return u, erriter, numIter
 
 
+def plot(u, erriter):
+    fig, axes = plt.subplots(2)
+
+    axes[0].imshow(u)
+    axes[0].set_title("Segmentation result u")
+
+    axes[1].plot(erriter)
+    axes[1].set_title("Erriter over i")
+
+    plt.show()
+
+
 if __name__ == "__main__":
     im_file = "../data/cameraman.jpg"
 
-    ur = sp.misc.imread(im_file)
-    ur = ur / 255
+    ur = sp.misc.imread(im_file) / 255
     rows, cols = ur.shape
 
     varParas = [rows, cols, 300, 1e-4, 0.3, 0.16]
@@ -93,7 +104,4 @@ if __name__ == "__main__":
     print("Erriter mean: {}".format(np.mean(erriter)))
     print("U mean: {}".format(np.mean(u)))
 
-    plt.imshow(u)
-    plt.show()
-
-
+    plot(u, erriter[:i])

@@ -39,19 +39,19 @@ def CMF_2D(ur, params):
         # the following steps are the gradient descent step with steps as the
         # step-size.
         pts = divp - (ps - pt + u/cc)
-        pp1[:, 1:cols] += steps * (pts[:, 1:cols] - pts[:, :cols-1])
-        pp2[1:rows, :] += steps * (pts[1:rows, :] - pts[:rows-1, :])
+        pp1[:, 1:-1] += steps * (pts[:, 1:] - pts[:, :-1])
+        pp2[1:-1, :] += steps * (pts[1:, :] - pts[:-1, :])
 
         # the following steps give the projection to make |p(x)| <= α(x)
-        squares = pp1[:, :cols]**2  + pp1[:, 1:]**2 + pp2[:rows, :]**2 + pp2[1:, :]**2
+        squares = pp1[:, :-1]**2  + pp1[:, 1:]**2 + pp2[:-1, :]**2 + pp2[1:, :]**2
         gk = np.sqrt(squares * .5)
         gk = (gk <= α) + np.logical_not(gk <= α) * (gk / α)
         gk = 1 / gk
 
-        pp1[:, 1:cols] = (.5 * (gk[:, 1:cols] + gk[:, :cols-1])) * (pp1[:, 1:cols])
-        pp2[1:rows, :] = (.5 * (gk[1:rows, :] + gk[:rows-1, :])) * (pp2[1:rows, :])
+        pp1[:, 1:-1] = (.5 * (gk[:, 1:] + gk[:, :-1])) * (pp1[:, 1:-1])
+        pp2[1:-1, :] = (.5 * (gk[1:, :] + gk[:-1, :])) * (pp2[1:-1, :])
 
-        divp = pp1[:, 1:] - pp1[:, :cols] + pp2[1:, :] - pp2[:rows, :]
+        divp = pp1[:, 1:] - pp1[:, :-1] + pp2[1:, :] - pp2[:-1, :]
 
         # updata the source flow ps
         pts = divp + pt - u/cc + 1/cc

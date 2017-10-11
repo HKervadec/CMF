@@ -3,9 +3,10 @@
 import numpy as np
 import scipy as sp
 import scipy.misc
+import matplotlib.pyplot as plt
 
 
-def CMF(ur, params):
+def CMF_2D(ur, params):
     rows, cols, numIter, errbound, cc, steps = params
     imgSize = ur.size
     assert(rows*cols == imgSize)
@@ -23,13 +24,12 @@ def CMF(ur, params):
     # specified legal flows.
     # - the initial value of the spatial flow fiels p = (pp1, pp2) is set to
     # be zero.
-    u = np.asarray((Cs - Ct) >= 0, np.float64)
+    u = ((Cs - Ct) >= 0) * 1.
     ps = np.minimum(Cs, Ct)  # Minimum element wise between the two
     pt = ps
 
     pp1 = np.zeros((rows, cols+1))
     pp2 = np.zeros((rows+1, cols))
-    # divp = pp1[:, 1:] - pp1[:, :cols] + pp2[1:, :] - pp2[:rows, :]
     divp = np.zeros((rows, cols))
 
     erriter = np.zeros(numIter)
@@ -51,12 +51,14 @@ def CMF(ur, params):
         pp1[:, 1:cols] = (.5 * (gk[:, 1:cols] + gk[:, :cols-1])) * (pp1[:, 1:cols])
         pp2[1:rows, :] = (.5 * (gk[1:rows, :] + gk[:rows-1, :])) * (pp2[1:rows, :])
 
+        divp = pp1[:, 1:] - pp1[:, :cols] + pp2[1:, :] - pp2[:rows, :]
+
         # updata the source flow ps
         pts = divp + pt - u/cc + 1/cc
         ps = np.minimum(pts, Cs)
 
         # update the sink flow pt
-        pt = - divp + ps + u/cc
+        pts = - divp + ps + u/cc
         pt = np.minimum(pts, Ct)
 
         erru = cc * (divp + pt - ps)
@@ -86,6 +88,12 @@ if __name__ == "__main__":
     para 5 - the step-size for the graident-projection of p
     """
 
-    u, erriter, i = CMF(ur, varParas)
+    u, erriter, i = CMF_2D(ur, varParas)
+    print("Iterations: {}".format(i))
+    print("Erriter mean: {}".format(np.mean(erriter)))
+    print("U mean: {}".format(np.mean(u)))
 
-    print("toto")
+    plt.imshow(u)
+    plt.show()
+
+

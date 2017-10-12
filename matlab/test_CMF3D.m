@@ -57,7 +57,7 @@ function [uu, erriter, num, tt] = test_CMF3D
 %   Copyright 2011 Jing Yuan (cn.yuanjing@gmail.com)
 %
 
-nfi_data = load_nii('data/IM_0190_frame_01.nii');
+nfi_data = load_nii('../data/IM_0190_frame_01.nii');
 ur = double(nfi_data.img)/255;
 %ur = ur(1:100,1:100,1:100);
 
@@ -89,4 +89,5 @@ fCt = abs(ur - ulab(2));
 %  Use the function CMF3D_GPU to run the algorithm on GPU
 % ----------------------------------------------------------------------
 
-[uu, erriter,num,tt] = CMF3D_GPU(single(penalty), single(fCs), single(fCt), single(varParas));
+% [uu, erriter,num,tt] = CMF3D_GPU(single(penalty), single(fCs), single(fCt), single(varParas));
+[uu, erriter,num,tt] = CMF3D_GPU();

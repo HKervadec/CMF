@@ -66,7 +66,7 @@ function [u, erriter, i, timet] = CMF3D_Cut
 %           Copyright 2011 Jing Yuan (cn.yuanjing@gmail.com)
 %
 
-nfi_data = load_nii('data/IM_0190_frame_01.nii');
+nfi_data = load_nii('../data/IM_0190_frame_01.nii');
 ur = double(nfi_data.img)/255;
 
 [rows, cols, heights]=size(ur);

@@ -3,7 +3,7 @@
 import numpy as np
 
 
-def CMF_2D(ur, params):
+def CMF_2D(ur, params, α=.5, Cs=None, Ct=None):
     numIter, errbound, cc, steps = params
     rows, cols = ur.shape
     imgSize = ur.size
@@ -12,9 +12,11 @@ def CMF_2D(ur, params):
     α = .5 * np.ones((rows, cols))
 
     # Build the data terms
-    ulab = [0.15, 0.6]
-    Cs = np.abs(ur - ulab[0])
-    Ct = np.abs(ur - ulab[1])
+    λlab = [0.15, 0.6]
+    if Cs is None:
+        Cs = np.abs(ur - λlab[0])
+    if Ct is None:
+        Ct = np.abs(ur - λlab[1])
 
     # set the initial values
     # - the initial value of λ is set to be an initial cut, see below.
@@ -79,9 +81,9 @@ def CMF_3D(ur, params):
     α = .5 * np.ones((rows, cols, height))
 
     # Build the data terms
-    ulab = [0.2, 0.7]
-    Cs = np.abs(ur - ulab[0])
-    Ct = np.abs(ur - ulab[1])
+    λlab = [0.2, 0.7]
+    Cs = np.abs(ur - λlab[0])
+    Ct = np.abs(ur - λlab[1])
 
     # set the initial values
     λ = np.asarray((Cs - Ct) >= 0, np.float64)

@@ -3,13 +3,15 @@
 import numpy as np
 
 
-def CMF_2D(ur, params, α=.5, Cs=None, Ct=None):
+def CMF_2D(ur, params, α=None, Cs=None, Ct=None):
     numIter, errbound, cc, steps = params
     rows, cols = ur.shape
     imgSize = ur.size
     assert(rows*cols == imgSize)
 
-    α = .5 * np.ones((rows, cols))
+    if α is None:
+        α = .5 * np.ones((rows, cols))
+
 
     # Build the data terms
     λlab = [0.15, 0.6]
